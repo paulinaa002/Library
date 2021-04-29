@@ -11,6 +11,7 @@ public class Publication {
     private int identificationNumber;
     private int publicationDate;
     private boolean isAvailable = false;
+    public Date todayDate = new Date();
 
 
     public Publication(){
@@ -46,9 +47,8 @@ public class Publication {
 
     public void takePublication(){    //void,String??
         if(isAvailable) {
-            //some code
-
             setAvailable(false);
+            //some code
         }
     }
 
