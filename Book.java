@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class Book extends Publication {
     private String genre;
-    private Date returnUntil = new Date();
+
 
     public Book(){
         super();
@@ -26,28 +26,23 @@ public class Book extends Publication {
 
 
     public void setGenre(String genre) { this.genre = genre; }
-    public void setReturnUntil(Date returnUntil) { this.returnUntil = returnUntil; }
 
     public String getGenre() { return genre; }
-    public Date getReturnUntil() { return returnUntil; }
 
 
-    /*public void takeBook(){
-        
-           
-        }
-    }*/
     @Override
     public void takePublication(){
-        Date date = new Date();
-        Calendar returnUntil = Calendar.getInstance();
-        returnUntil.setTime(date);
-        returnUntil.add(Calendar.MONTH, +1);
-        date = returnUntil.getTime();
+        super.takePublication();
+        Calendar dateNow = Calendar.getInstance();
+        dateNow.setTime(todayDate);
+        dateNow.add(Calendar.MONTH, +1);
+        todayDate = dateNow.getTime();
+        //System.out.println(todayDate);
 
     }
 
     public void returnBook(){
+        todayDate = null;
         //and returnDate should be =null
         setAvailable(true);
     }
