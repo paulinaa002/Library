@@ -2,11 +2,12 @@ package library.publication;
 
 import library.Publication;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class Magazine extends Publication {
 
     private int releaseNo;
-    private double price;
-   // private final int oldReleaseNo = 13;
 
 
     public Magazine(){
@@ -16,32 +17,32 @@ public class Magazine extends Publication {
     public Magazine(int releaseNo){
         super();
         this.releaseNo = releaseNo;
-        this.price = price;
     }
 
-    public Magazine(String author, String title, int identificationNumber, int publicationDate, boolean isAvailable, int releaseNo, double price){
+    public Magazine(String author, String title, int identificationNumber, int publicationDate, boolean isAvailable, int releaseNo){
         super(author, title, identificationNumber, publicationDate, isAvailable);
         this.releaseNo = releaseNo;
-        this.price = price;
     }
 
 
     public void setReleaseNo(int releaseNo) { this.releaseNo = releaseNo; }
-    public void setPrice(double price) { this.price = price; }
 
     public int getReleaseNo() { return releaseNo; }
-    public double getPrice() { return price; }
 
 
     public void sellMagazine(){
-
     }
 
 
     @Override
     public void takePublication(){
-
+        super.takePublication();
+        Calendar dateNow = Calendar.getInstance();
+        dateNow.setTime(todayDate);
+        dateNow.add(Calendar.MONTH, +3);
+        todayDate = dateNow.getTime();
     }
+
 
     @Override
     public String toString() {
@@ -51,8 +52,7 @@ public class Magazine extends Publication {
                 "\nID: " + getIdentificationNumber() +
                 "\nyear: " + getPublicationDate() +
                 "\nrelease no: " + releaseNo +
-                "\nis in library: " + getAvailable() +
-                "\nits price: " + price;
+                "\nis in library: " + getAvailable();
     }
 
 
@@ -60,7 +60,6 @@ public class Magazine extends Publication {
     public void clearData(){
         super.clearData();
         releaseNo = -1;
-        price = -1;
     }
 
 }
