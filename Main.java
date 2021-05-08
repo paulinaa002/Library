@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Book b1 = new Book("Shakespeare", "Hamlet", 11111, 2001, true, "novel");
+        /*Book b1 = new Book("Shakespeare", "Hamlet", 11111, 2001, true, "novel");
         //b1.takeBook();
         //b1.takeBook();
         b1.setReturnUntil(new Date());
@@ -35,9 +35,9 @@ public class Main {
         p = new Magazine("autorius2", "pavadinimas2", 66666, 2006, true, 6666, 6.6);
         System.out.println(p.toString());
         p.clearData();
-        System.out.println(p.toString());*/
+        System.out.println(p.toString());
 
-       p.takePublication();
+       p.takePublication();*/
 
 
     }
