@@ -1,11 +1,12 @@
-package library.publication;
+package library.publication.magazine;
 
-import library.Publication;
+import library.publication.Publication;
 
 import java.util.Calendar;
 import java.util.Date;
 
-public class Magazine extends Publication {
+
+public class Magazine extends Publication  {
 
     private int releaseNo;
 
@@ -19,8 +20,8 @@ public class Magazine extends Publication {
         this.releaseNo = releaseNo;
     }
 
-    public Magazine(String author, String title, int identificationNumber, int publicationDate, boolean isAvailable, int releaseNo){
-        super(author, title, identificationNumber, publicationDate, isAvailable);
+    public Magazine(String author, String title, int identificationNumber, int publicationDate, int releaseNo){
+        super(author, title, identificationNumber, publicationDate);
         this.releaseNo = releaseNo;
     }
 
@@ -30,19 +31,36 @@ public class Magazine extends Publication {
     public int getReleaseNo() { return releaseNo; }
 
 
-    public void sellMagazine(){
+    @Override
+    public void takePublication() {
+        if(getAvailable()) {
+            todayDate = new Date();
+            setAvailable(false);
+            Calendar tempDate = Calendar.getInstance();
+            tempDate.setTime(todayDate);
+            tempDate.add(Calendar.MONTH, +1);
+            setDueDate(tempDate.getTime());
+        }
     }
-
 
     @Override
-    public void takePublication(){
-        super.takePublication();
-        Calendar dateNow = Calendar.getInstance();
-        dateNow.setTime(todayDate);
-        dateNow.add(Calendar.MONTH, +3);
-        todayDate = dateNow.getTime();
+    public String checkReturnDate() {
+        return "Return until: " + getDueDate();
     }
 
+    @Override
+    public void returnPublication() {
+            setDueDate(null);
+            setAvailable(true);
+    }
+
+    @Override
+    public void extendDueDate() {
+        Calendar tempDate = Calendar.getInstance();
+        tempDate.setTime(getDueDate());
+        tempDate.add(Calendar.MONTH, +3);
+        setDueDate(tempDate.getTime());
+    }
 
     @Override
     public String toString() {
@@ -51,15 +69,6 @@ public class Magazine extends Publication {
                 "\ntitle: " + getTitle() +
                 "\nID: " + getIdentificationNumber() +
                 "\nyear: " + getPublicationDate() +
-                "\nrelease no: " + releaseNo +
-                "\nis in library: " + getAvailable();
+                "\ngenre: " + releaseNo;
     }
-
-
-    @Override
-    public void clearData(){
-        super.clearData();
-        releaseNo = -1;
-    }
-
 }
