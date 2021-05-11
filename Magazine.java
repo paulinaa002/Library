@@ -1,27 +1,34 @@
 package library.publication.magazine;
 
+import library.LibraryException;
 import library.publication.Publication;
+import library.publication.PublicationIssueDateException;
+import library.publication.PublicationNotAvailableException;
 
 import java.util.Calendar;
 import java.util.Date;
 
 
-public class Magazine extends Publication  {
+public class Magazine extends Publication implements Cloneable {
 
     private int releaseNo;
 
 
     public Magazine(){
+
         super();
     }
 
-    public Magazine(int releaseNo){
+    public Magazine(int releaseNo) throws LibraryException {
         super();
         this.releaseNo = releaseNo;
     }
 
-    public Magazine(String author, String title, int identificationNumber, int publicationDate, int releaseNo){
+    public Magazine(String author, String title, int identificationNumber, int publicationDate, int releaseNo) throws LibraryException {
         super(author, title, identificationNumber, publicationDate);
+        year = Calendar.getInstance().get(Calendar.YEAR);
+        if(publicationDate > year)
+            throw new PublicationIssueDateException(this, "Publication is not released yet.", new Date());
         this.releaseNo = releaseNo;
     }
 
@@ -32,33 +39,26 @@ public class Magazine extends Publication  {
 
 
     @Override
-    public void takePublication() {
+    public void takePublication() throws PublicationNotAvailableException {
         if(getAvailable()) {
-            todayDate = new Date();
-            setAvailable(false);
+            super.takePublication();
             Calendar tempDate = Calendar.getInstance();
             tempDate.setTime(todayDate);
-            tempDate.add(Calendar.MONTH, +1);
+            tempDate.add(Calendar.MONTH, +3);
             setDueDate(tempDate.getTime());
+        }
+        else{
+            throw new PublicationNotAvailableException(this, "Magazine is not available");
         }
     }
 
-    @Override
-    public String checkReturnDate() {
-        return "Return until: " + getDueDate();
-    }
 
-    @Override
-    public void returnPublication() {
-            setDueDate(null);
-            setAvailable(true);
-    }
 
     @Override
     public void extendDueDate() {
         Calendar tempDate = Calendar.getInstance();
         tempDate.setTime(getDueDate());
-        tempDate.add(Calendar.MONTH, +3);
+        tempDate.add(Calendar.MONTH, +2);
         setDueDate(tempDate.getTime());
     }
 
@@ -69,6 +69,17 @@ public class Magazine extends Publication  {
                 "\ntitle: " + getTitle() +
                 "\nID: " + getIdentificationNumber() +
                 "\nyear: " + getPublicationDate() +
-                "\ngenre: " + releaseNo;
+                "\nrelease no: " + releaseNo;
+    }
+
+    public Magazine clone() {
+        Magazine cloned = null;
+        try{
+             cloned = (Magazine) super.clone();
+        } catch (CloneNotSupportedException exc){
+            exc.printStackTrace();
+        }
+        cloned.releaseNo = this.releaseNo;
+        return cloned;
     }
 }
