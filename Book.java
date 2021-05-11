@@ -1,6 +1,9 @@
 package library.publication.book;
 
+import library.LibraryException;
 import library.publication.Publication;
+import library.publication.PublicationIssueDateException;
+import library.publication.PublicationNotAvailableException;
 
 import java.time.Duration;
 import java.util.Calendar;
@@ -12,17 +15,25 @@ public class Book extends Publication {
     private double fine;
 
 
+
     public Book(){
+
         super();
     }
 
-    public Book(String genre){
+    public Book(String genre) throws LibraryException{
         super();
+
         this.genre = genre;
     }
 
-    public Book(String author, String title, int identificationNumber, int publicationDate, String genre){
+    public Book(String author, String title, int identificationNumber, int publicationDate, String genre) throws LibraryException {
         super(author, title, identificationNumber, publicationDate);
+
+        year = Calendar.getInstance().get(Calendar.YEAR);
+        if(publicationDate > year)
+            throw new PublicationIssueDateException(this, "Publication is not released yet.", new Date());
+
         this.genre = genre;
     }
 
@@ -34,27 +45,20 @@ public class Book extends Publication {
     public double getFine() { return fine; }
 
 
-    public void takePublication(){
+    @Override
+    public void takePublication() throws PublicationNotAvailableException {
         if(getAvailable()) {
-            todayDate = new Date();
-            setAvailable(false);
+            super.takePublication();
             Calendar tempDate = Calendar.getInstance();
             tempDate.setTime(todayDate);
             tempDate.add(Calendar.MONTH, +1);
             setDueDate(tempDate.getTime());
         }
+        else{
+            throw new PublicationNotAvailableException(this, "Book is not available");
+        }
     }
 
-@Override
-    public String checkReturnDate(){
-        return "Return until: " + getDueDate();
-    }
-
-@Override
-    public void returnPublication(){
-        setDueDate(null);
-        setAvailable(true);
-    }
 
 @Override
     public void extendDueDate(){
