@@ -77,10 +77,4 @@ public abstract class Publication implements TakeableWithProlong, Cloneable {
 
 
 
-    @Override
-    public Publication clone() throws CloneNotSupportedException{
-        return (Publication) super.clone();
-    }
-
-
 }
