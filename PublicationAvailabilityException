@@ -1,0 +1,32 @@
+package library.publication;
+
+
+import library.publication.book.Book;
+import library.publication.magazine.Magazine;
+
+
+public class PublicationAvailabilityException extends PublicationException {
+
+    private boolean status;
+
+    public PublicationAvailabilityException(){
+        super();
+    }
+
+    public PublicationAvailabilityException(Publication publication, String message, boolean status) {
+        super(publication, message);
+        this.status = status;
+    }
+
+    public PublicationAvailabilityException(Book book, String message, boolean status) {
+        super(book, message);
+        this.status = status;
+    }
+
+    public PublicationAvailabilityException(Magazine magazine, String message, boolean status) {
+        super(magazine, message);
+        this.status = status;
+    }
+
+    public boolean getStatus() { return status; }
+}
