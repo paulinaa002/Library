@@ -1,9 +1,6 @@
 package library.publication.book;
 
-import library.LibraryException;
-import library.publication.Publication;
-import library.publication.PublicationIssueDateException;
-import library.publication.PublicationNotAvailableException;
+import library.publication.*;
 
 import java.time.Duration;
 import java.util.Calendar;
@@ -17,23 +14,17 @@ public class Book extends Publication {
 
 
     public Book(){
-
         super();
     }
 
-    public Book(String genre) throws LibraryException{
+    public Book(String genre) {
         super();
 
         this.genre = genre;
     }
 
-    public Book(String author, String title, int identificationNumber, int publicationDate, String genre) throws LibraryException {
+    public Book(String author, String title, int identificationNumber, int publicationDate, String genre) {
         super(author, title, identificationNumber, publicationDate);
-
-        year = Calendar.getInstance().get(Calendar.YEAR);
-        if(publicationDate > year)
-            throw new PublicationIssueDateException(this, "Publication is not released yet.", new Date());
-
         this.genre = genre;
     }
 
@@ -46,7 +37,7 @@ public class Book extends Publication {
 
 
     @Override
-    public void takePublication() throws PublicationNotAvailableException {
+    public void takePublication() throws PublicationAvailabilityException {
         if(getAvailable()) {
             super.takePublication();
             Calendar tempDate = Calendar.getInstance();
@@ -55,17 +46,24 @@ public class Book extends Publication {
             setDueDate(tempDate.getTime());
         }
         else{
-            throw new PublicationNotAvailableException(this, "Book is not available");
+            throw new PublicationAvailabilityException(this, "Book is not available", getAvailable());
         }
     }
 
 
 @Override
-    public void extendDueDate(){
-        Calendar tempDate = Calendar.getInstance();
-        tempDate.setTime(getDueDate());
-        tempDate.add(Calendar.MONTH, +1);
-        setDueDate(tempDate.getTime());
+    public void extendDueDate(int amount) throws PublicationException{
+        if(getAvailable()){
+            throw new PublicationAvailabilityException(this, "Book is not taken", getAvailable());
+        } else if (amount > 12){
+            throw new PublicationException(this, "Extension time too long");
+        }
+        else {
+            Calendar tempDate = Calendar.getInstance();
+            tempDate.setTime(getDueDate());
+            tempDate.add(Calendar.MONTH, +amount);
+            setDueDate(tempDate.getTime());
+        }
     }
 
     public long getDateDifferenceInDays() {
