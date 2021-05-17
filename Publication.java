@@ -40,25 +40,19 @@ public abstract class Publication implements TakeableWithProlong, Cloneable {
     public final void setAuthor(String author) { this.author = author; }
     public final void setTitle (String title) { this.title = title; }
     public final void setIdentificationNumber (int ID) { identificationNumber = ID; }
-    public final void setPublicationDate (int publicationDate) throws PublicationIssueDateException {
-        year = Calendar.getInstance().get(Calendar.YEAR);
-        if(publicationDate > year)
-            throw new PublicationIssueDateException(this, "Publication is not released yet.", new Date());
-        else
-            this.publicationDate = publicationDate;
-    }
+    public final void setPublicationDate (int publicationDate) { this.publicationDate = publicationDate;}
     public void setAvailable (boolean isAvailable) { this.isAvailable = isAvailable; }
     public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
 
 
     @Override
-    public void takePublication() throws PublicationNotAvailableException{
+    public void takePublication() throws PublicationAvailabilityException{
         if(isAvailable) {
             todayDate = new Date();
             setAvailable(false);
         }
         else{
-            throw new PublicationNotAvailableException(this, "Publication is not available");
+            throw new PublicationAvailabilityException(this, "Publication is not available", getAvailable());
         }
     }
 
@@ -75,6 +69,20 @@ public abstract class Publication implements TakeableWithProlong, Cloneable {
     }
 
 
+
+    @Override
+    public Publication clone(){
+        Publication clone = null;
+        try{
+            clone = (Publication) super.clone();
+            clone.author = new String(this.author);
+            clone.title = new String(this.title);
+            clone.dueDate = (Date) this.dueDate.clone();
+        } catch (CloneNotSupportedException exc) {
+            exc.printStackTrace();
+        }
+        return clone;
+    }
 
 
 }
