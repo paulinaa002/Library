@@ -2,7 +2,7 @@ package library.publication;
 
 public interface Takeable {
 
-    void takePublication();
+    void takePublication() throws PublicationAvailabilityException;
     void returnPublication();
 
 }
